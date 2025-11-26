@@ -44,6 +44,13 @@ const Dashboard = () => {
     }
   }, [userData?.id]);
 
+  // Redirect admins to admin dashboard
+  useEffect(() => {
+    if (userData?.role === 'admin') {
+      navigate('/admin');
+    }
+  }, [userData?.role, navigate]);
+
   const fetchDonorData = async () => {
     if (!userData?.id) return;
 
@@ -53,7 +60,9 @@ const Dashboard = () => {
       // Fetch donations for this donor
       const donationsQuery = query(
         collection(db, 'donations'),
-        where('donorId', '==', userData.id)
+        where('donorId', '==', userData.id),
+        orderBy('createdAt', 'desc'),
+        limit(10) // Only fetch recent 10 donations
       );
       const donationsSnapshot = await getDocs(donationsQuery);
       
@@ -61,8 +70,41 @@ const Dashboard = () => {
       let activeSubscriptions = 0;
       const orphanIds = new Set<string>();
       const recentDonationsList: RecentDonation[] = [];
+      
+      // Collect unique orphan IDs first
+      const orphanIdsToFetch = new Set<string>();
+      donationsSnapshot.docs.forEach(doc => {
+        const data = doc.data();
+        if (data.orphanId) {
+          orphanIdsToFetch.add(data.orphanId);
+        }
+      });
 
-      for (const donationDoc of donationsSnapshot.docs) {
+      // Fetch all orphan names in parallel
+      const orphanNamesMap = new Map<string, string>();
+      if (orphanIdsToFetch.size > 0) {
+        const orphanPromises = Array.from(orphanIdsToFetch).map(async (orphanId) => {
+          try {
+            const orphanDoc = await getDoc(doc(db, 'orphans', orphanId));
+            if (orphanDoc.exists()) {
+              return { id: orphanId, name: orphanDoc.data().name };
+            }
+          } catch (error) {
+            console.error('Error fetching orphan:', error);
+          }
+          return { id: orphanId, name: 'Unknown Orphan' };
+        });
+        
+        const orphanResults = await Promise.all(orphanPromises);
+        orphanResults.forEach(result => {
+          if (result) {
+            orphanNamesMap.set(result.id, result.name);
+          }
+        });
+      }
+
+      // Process donations
+      donationsSnapshot.forEach((donationDoc) => {
         const data = donationDoc.data();
         
         // Calculate total amount
@@ -80,32 +122,14 @@ const Dashboard = () => {
           orphanIds.add(data.orphanId);
         }
 
-        // Fetch orphan name for recent donations
-        let orphanName = 'Unknown Orphan';
-        try {
-          const orphanDoc = await getDoc(doc(db, 'orphans', data.orphanId));
-          if (orphanDoc.exists()) {
-            orphanName = orphanDoc.data().name;
-          }
-        } catch (error) {
-          console.error('Error fetching orphan:', error);
-        }
-
         recentDonationsList.push({
           id: donationDoc.id,
           amount: data.amount,
           type: data.type,
           status: data.status,
-          orphanName,
+          orphanName: orphanNamesMap.get(data.orphanId) || 'Unknown Orphan',
           createdAt: data.createdAt
         });
-      }
-
-      // Sort by date and take top 5
-      recentDonationsList.sort((a, b) => {
-        const timeA = a.createdAt?.seconds || 0;
-        const timeB = b.createdAt?.seconds || 0;
-        return timeB - timeA;
       });
 
       setStats({

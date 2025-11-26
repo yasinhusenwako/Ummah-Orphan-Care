@@ -5,27 +5,36 @@ import { Heart, Eye, Target, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const About = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
   const values = [
     {
       icon: Heart,
-      title: "ፍቅር (Love)",
-      description: "We approach every Ethiopian child with compassion, understanding their unique needs and cultural background.",
+      titleEn: "Love",
+      titleAm: "ፍቅር (Love)",
+      descriptionEn: "We approach every Ethiopian child with compassion, understanding their unique needs and cultural background.",
+      descriptionAm: "እያንዳንዱን የኢትዮጵያ ልጅ በርህራሄ እንቀርባለን፣ ልዩ ፍላጎቶቻቸውን እና የባህል ዳራቸውን እንረዳለን።",
     },
     {
       icon: Users,
-      title: "አንድነት (Unity)",
-      description: "We unite communities across all 12 Ethiopian regions for the common cause of supporting orphaned children.",
+      titleEn: "Unity",
+      titleAm: "አንድነት (Unity)",
+      descriptionEn: "We unite communities across all 12 Ethiopian regions for the common cause of supporting orphaned children.",
+      descriptionAm: "ወላጅ አልባ ህጻናትን ለመደገፍ በሁሉም 12 የኢትዮጵያ ክልሎች ማህበረሰቦችን እናዋህዳለን።",
     },
     {
       icon: Target,
-      title: "ተስፋ (Hope)",
-      description: "Our work is driven by building hope and creating lasting positive change in Ethiopian children's lives.",
+      titleEn: "Hope",
+      titleAm: "ተስፋ (Hope)",
+      descriptionEn: "Our work is driven by building hope and creating lasting positive change in Ethiopian children's lives.",
+      descriptionAm: "ስራችን ተስፋ በመገንባት እና በኢትዮጵያ ህጻናት ህይወት ውስጥ ዘላቂ አዎንታዊ ለውጥ በመፍጠር ይመራል።",
     },
     {
       icon: Eye,
-      title: "ግልጽነት (Transparency)",
-      description: "We maintain complete transparency in how Ethiopian Birr donations are utilized and impact is measured.",
+      titleEn: "Transparency",
+      titleAm: "ግልጽነት (Transparency)",
+      descriptionEn: "We maintain complete transparency in how Ethiopian Birr donations are utilized and impact is measured.",
+      descriptionAm: "የኢትዮጵያ ብር ልገሳዎች እንዴት ጥቅም ላይ እንደሚውሉ እና ተጽእኖ እንዴት እንደሚለካ ሙሉ ግልጽነትን እንጠብቃለን።",
     },
   ];
 
@@ -118,8 +127,12 @@ const About = () => {
                   <div className="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center">
                     <value.icon className="w-8 h-8 text-primary-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground">{value.title}</h3>
-                  <p className="text-muted-foreground">{value.description}</p>
+                  <h3 className="text-xl font-bold text-foreground">
+                    {language === 'am' ? value.titleAm : value.titleEn}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {language === 'am' ? value.descriptionAm : value.descriptionEn}
+                  </p>
                 </CardContent>
               </Card>
             ))}

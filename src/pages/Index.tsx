@@ -43,9 +43,9 @@ const Index = () => {
 
   const stats = [
     { icon: Users, value: "5,000+", label: t('stats.childrenHelped') },
-    { icon: Heart, value: "ብር 100M+", label: t('stats.raisedThisYear') },
     { icon: GraduationCap, value: "850+", label: t('stats.educated') },
     { icon: HomeIcon, value: "12", label: t('stats.regionalCenters') },
+    { icon: Heart, value: "98%", label: "Success Rate", highlight: true },
   ];
 
   return (
@@ -94,10 +94,16 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center space-y-2">
-                <div className="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center mb-4">
+                <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${
+                  stat.highlight ? 'bg-green-500' : 'bg-primary'
+                }`}>
                   <stat.icon className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <div className="text-3xl md:text-4xl font-bold text-foreground">{stat.value}</div>
+                <div className={`text-3xl md:text-4xl font-bold ${
+                  stat.highlight ? 'text-green-600' : 'text-foreground'
+                }`}>
+                  {stat.value}
+                </div>
                 <div className="text-muted-foreground">{stat.label}</div>
               </div>
             ))}
@@ -153,7 +159,7 @@ const Index = () => {
             <div className="grid grid-cols-2 gap-4">
               <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/10 backdrop-blur">
                 <CardContent className="p-6 text-center space-y-2">
-                  <div className="text-4xl font-bold text-accent">98%</div>
+                  <div className="text-4xl font-bold text-accent">100%</div>
                   <div className="text-sm text-primary-foreground/80">Funds to Programs</div>
                 </CardContent>
               </Card>

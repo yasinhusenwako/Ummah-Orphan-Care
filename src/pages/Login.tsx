@@ -7,15 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Lock, User, Phone, Loader2, Eye, EyeOff, Shield, Heart } from 'lucide-react';
+import { Mail, Lock, User, Phone, Loader2, Eye, EyeOff } from 'lucide-react';
 import type { ConfirmationResult } from 'firebase/auth';
 
 const Login = () => {
   const navigate = useNavigate();
   const { user, userData, loading: authLoading } = useAuth();
 
-  // Login mode state
-  const [loginMode, setLoginMode] = useState<'donor' | 'admin'>('donor');
+
 
   // Email/Password state
   const [email, setEmail] = useState('');
@@ -54,18 +53,19 @@ const Login = () => {
 
     try {
       const result = isRegister
-        ? await authApi.register(email, password, displayName, loginMode === 'admin' ? 'admin' : 'donor')
+        ? await authApi.register(email, password, displayName, 'donor')
         : await authApi.login(email, password);
 
       if (result.success) {
-        // Redirect based on login mode
+        // Small delay to allow auth state to update, then check role
         setTimeout(() => {
-          if (loginMode === 'admin') {
+          // Force a check - the useEffect should trigger, but as backup:
+          if (userData?.role === 'admin') {
             navigate('/admin');
           } else {
             navigate('/dashboard');
           }
-        }, 500);
+        }, 1000);
       } else {
         setError(result.error || 'Authentication failed');
       }
@@ -82,16 +82,16 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const result = await authApi.loginWithGoogle(loginMode === 'admin' ? 'admin' : 'donor');
+      const result = await authApi.loginWithGoogle('donor');
       if (result.success) {
-        // Redirect based on login mode
+        // Small delay to allow auth state to update
         setTimeout(() => {
-          if (loginMode === 'admin') {
+          if (userData?.role === 'admin') {
             navigate('/admin');
           } else {
             navigate('/dashboard');
           }
-        }, 500);
+        }, 1000);
       } else {
         setError(result.error || 'Google login failed');
       }
@@ -138,18 +138,18 @@ const Login = () => {
         confirmationResult,
         verificationCode,
         phoneDisplayName,
-        loginMode === 'admin' ? 'admin' : 'donor'
+        'donor'
       );
 
       if (result.success) {
-        // Redirect based on login mode
+        // Small delay to allow auth state to update
         setTimeout(() => {
-          if (loginMode === 'admin') {
+          if (userData?.role === 'admin') {
             navigate('/admin');
           } else {
             navigate('/dashboard');
           }
-        }, 500);
+        }, 1000);
       } else {
         setError(result.error || 'Verification failed');
       }
@@ -172,37 +172,12 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-3">
-          {/* Login Mode Toggle */}
-          <div className="flex gap-2 p-1 bg-secondary rounded-lg">
-            <Button
-              type="button"
-              variant={loginMode === 'donor' ? 'default' : 'ghost'}
-              className="flex-1"
-              onClick={() => setLoginMode('donor')}
-            >
-              <Heart className="w-4 h-4 mr-2" />
-              Donor
-            </Button>
-            <Button
-              type="button"
-              variant={loginMode === 'admin' ? 'default' : 'ghost'}
-              className="flex-1"
-              onClick={() => setLoginMode('admin')}
-            >
-              <Shield className="w-4 h-4 mr-2" />
-              Admin
-            </Button>
-          </div>
-
           <div className="text-center">
             <CardTitle className="text-2xl font-bold">
-              {loginMode === 'admin' ? 'Admin Login' : 'Donor Login'}
+              Welcome Back
             </CardTitle>
             <CardDescription>
-              {loginMode === 'admin' 
-                ? 'Access the admin panel to manage the platform'
-                : 'Sign in to support orphans and make a difference'
-              }
+              Sign in to support orphans and make a difference
             </CardDescription>
           </div>
         </CardHeader>
@@ -216,18 +191,8 @@ const Login = () => {
 
             {/* Email/Password Tab */}
             <TabsContent value="email" className="space-y-4">
-              {/* Test Credentials Helper */}
-              {loginMode === 'admin' && (
-                <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
-                  <p className="text-xs font-semibold text-primary mb-1">Test Credentials:</p>
-                  <code className="text-xs bg-background px-2 py-1 rounded block">
-                    admin@ummah.test / Admin123!
-                  </code>
-                </div>
-              )}
-
               <form onSubmit={handleEmailLogin} className="space-y-4">
-                {isRegister && loginMode === 'donor' && (
+                {isRegister && (
                   <div className="space-y-2">
                     <Label htmlFor="displayName">Full Name</Label>
                     <div className="relative">
@@ -295,25 +260,19 @@ const Login = () => {
                 )}
 
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : loginMode === 'admin' ? (
-                    <Shield className="w-4 h-4 mr-2" />
-                  ) : null}
+                  {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                   {isRegister ? 'Create Account' : 'Sign In'}
                 </Button>
 
-                {loginMode === 'donor' && (
-                  <div className="text-center text-sm">
-                    <button
-                      type="button"
-                      onClick={() => setIsRegister(!isRegister)}
-                      className="text-primary hover:underline"
-                    >
-                      {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-                    </button>
-                  </div>
-                )}
+                <div className="text-center text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setIsRegister(!isRegister)}
+                    className="text-primary hover:underline"
+                  >
+                    {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+                  </button>
+                </div>
               </form>
             </TabsContent>
 

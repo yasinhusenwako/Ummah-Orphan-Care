@@ -99,7 +99,7 @@ const Causes = () => {
             </p>
             <div className="grid md:grid-cols-3 gap-6 pt-8">
               <div className="space-y-2">
-                <div className="text-4xl font-bold text-primary">98%</div>
+                <div className="text-4xl font-bold text-primary">100%</div>
                 <div className="text-muted-foreground">{t('causes.toPrograms')}</div>
               </div>
               <div className="space-y-2">

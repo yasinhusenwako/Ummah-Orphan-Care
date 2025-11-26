@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Sponsor = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [selectedAmount, setSelectedAmount] = useState("1500");
   const [customAmount, setCustomAmount] = useState("");
@@ -77,14 +77,16 @@ const Sponsor = () => {
                                 : "border-border hover:border-primary"
                             }`}
                           >
-                            ብር {amount}/mo
+                            {language === 'am' ? 'ብር' : 'ETB'} {amount}/mo
                           </button>
                         ))}
                       </div>
                       <div>
                         <Label htmlFor="custom">{t('sponsor.customAmount')}</Label>
                         <div className="relative mt-2">
-                          <span className="absolute left-3 top-3 text-muted-foreground">ብር</span>
+                          <span className="absolute left-3 top-3 text-muted-foreground">
+                            {language === 'am' ? 'ብር' : 'ETB'}
+                          </span>
                           <Input
                             id="custom"
                             type="number"
@@ -102,64 +104,66 @@ const Sponsor = () => {
 
                     {/* Cause Selection */}
                     <div className="space-y-2">
-                      <Label htmlFor="cause">Support Area</Label>
+                      <Label htmlFor="cause">{t('sponsor.supportArea')}</Label>
                       <Select defaultValue="general">
                         <SelectTrigger id="cause">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="general">Where Most Needed</SelectItem>
-                          <SelectItem value="education">Education</SelectItem>
-                          <SelectItem value="food">Food & Nutrition</SelectItem>
-                          <SelectItem value="shelter">Shelter</SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
+                          <SelectItem value="general">{t('sponsor.whereMostNeeded')}</SelectItem>
+                          <SelectItem value="education">{t('causes.education')}</SelectItem>
+                          <SelectItem value="food">{t('causes.food')}</SelectItem>
+                          <SelectItem value="shelter">{t('causes.shelter')}</SelectItem>
+                          <SelectItem value="healthcare">{t('causes.healthcare')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     {/* Region Selection */}
                     <div className="space-y-2">
-                      <Label htmlFor="region">Ethiopian Region - ክልል</Label>
+                      <Label htmlFor="region">
+                        {language === 'am' ? 'Ethiopian Region - ክልል' : 'Ethiopian Region'}
+                      </Label>
                       <Select defaultValue="any">
                         <SelectTrigger id="region">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="any">Any Region</SelectItem>
-                          <SelectItem value="addis-ababa">Addis Ababa</SelectItem>
-                          <SelectItem value="tigray">Tigray</SelectItem>
-                          <SelectItem value="amhara">Amhara</SelectItem>
-                          <SelectItem value="oromia">Oromia</SelectItem>
-                          <SelectItem value="somali">Somali</SelectItem>
-                          <SelectItem value="afar">Afar</SelectItem>
-                          <SelectItem value="sidama">Sidama</SelectItem>
-                          <SelectItem value="snnpr">SNNPR</SelectItem>
-                          <SelectItem value="benishangul">Benishangul-Gumuz</SelectItem>
-                          <SelectItem value="gambela">Gambela</SelectItem>
-                          <SelectItem value="harari">Harari</SelectItem>
-                          <SelectItem value="dire-dawa">Dire Dawa</SelectItem>
+                          <SelectItem value="any">{t('sponsor.anyRegion')}</SelectItem>
+                          <SelectItem value="addis-ababa">{language === 'am' ? 'አዲስ አበባ' : 'Addis Ababa'}</SelectItem>
+                          <SelectItem value="tigray">{language === 'am' ? 'ትግራይ' : 'Tigray'}</SelectItem>
+                          <SelectItem value="amhara">{language === 'am' ? 'አማራ' : 'Amhara'}</SelectItem>
+                          <SelectItem value="oromia">{language === 'am' ? 'ኦሮሚያ' : 'Oromia'}</SelectItem>
+                          <SelectItem value="somali">{language === 'am' ? 'ሶማሌ' : 'Somali'}</SelectItem>
+                          <SelectItem value="afar">{language === 'am' ? 'አፋር' : 'Afar'}</SelectItem>
+                          <SelectItem value="sidama">{language === 'am' ? 'ሲዳማ' : 'Sidama'}</SelectItem>
+                          <SelectItem value="snnpr">{language === 'am' ? 'ደቡብ ብሔሮች' : 'SNNPR'}</SelectItem>
+                          <SelectItem value="benishangul">{language === 'am' ? 'ቤንሻንጉል ጉሙዝ' : 'Benishangul-Gumuz'}</SelectItem>
+                          <SelectItem value="gambela">{language === 'am' ? 'ጋምቤላ' : 'Gambela'}</SelectItem>
+                          <SelectItem value="harari">{language === 'am' ? 'ሐረሪ' : 'Harari'}</SelectItem>
+                          <SelectItem value="dire-dawa">{language === 'am' ? 'ድሬዳዋ' : 'Dire Dawa'}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     {/* Personal Information */}
                     <div className="pt-4 border-t">
-                      <h3 className="text-lg font-semibold mb-4">Your Information</h3>
+                      <h3 className="text-lg font-semibold mb-4">{t('sponsor.yourInfo')}</h3>
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="firstName">First Name *</Label>
+                          <Label htmlFor="firstName">{t('sponsor.firstName')} *</Label>
                           <Input id="firstName" required />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="lastName">Last Name *</Label>
+                          <Label htmlFor="lastName">{t('sponsor.lastName')} *</Label>
                           <Input id="lastName" required />
                         </div>
                         <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="email">Email Address *</Label>
+                          <Label htmlFor="email">{t('sponsor.emailAddress')} *</Label>
                           <Input id="email" type="email" required />
                         </div>
                         <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="phone">Phone Number</Label>
+                          <Label htmlFor="phone">{t('sponsor.phoneNumber')}</Label>
                           <Input id="phone" type="tel" />
                         </div>
                       </div>
@@ -169,15 +173,14 @@ const Sponsor = () => {
                     <div className="flex items-start space-x-2 pt-4">
                       <Checkbox id="terms" required />
                       <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed">
-                        I agree to monthly recurring donations and understand I can cancel anytime. 
-                        I accept the terms and privacy policy.
+                        {t('sponsor.terms')}
                       </label>
                     </div>
 
                     {/* Submit Button */}
                     <Button type="submit" size="lg" className="w-full text-lg font-semibold">
                       <CreditCard className="w-5 h-5 mr-2" />
-                      Proceed to Secure Payment
+                      {t('sponsor.proceedPayment')}
                     </Button>
                   </form>
                 </CardContent>
@@ -192,23 +195,33 @@ const Sponsor = () => {
                   <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mb-2">
                     <Heart className="w-6 h-6 text-accent-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold">Your Impact - ተጽእኖዎ</h3>
+                  <h3 className="text-xl font-bold">
+                    {language === 'am' ? 'Your Impact - ተጽእኖዎ' : 'Your Impact'}
+                  </h3>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between pb-2 border-b border-border">
-                      <span className="text-muted-foreground">ብር 750/month</span>
-                      <span className="font-semibold">Food for 1 child</span>
+                      <span className="text-muted-foreground">
+                        {language === 'am' ? 'ብር' : 'ETB'} 750/month
+                      </span>
+                      <span className="font-semibold">{t('sponsor.foodForChild')}</span>
                     </div>
                     <div className="flex justify-between pb-2 border-b border-border">
-                      <span className="text-muted-foreground">ብር 1,500/month</span>
-                      <span className="font-semibold">Education support</span>
+                      <span className="text-muted-foreground">
+                        {language === 'am' ? 'ብር' : 'ETB'} 1,500/month
+                      </span>
+                      <span className="font-semibold">{t('sponsor.educationSupport')}</span>
                     </div>
                     <div className="flex justify-between pb-2 border-b border-border">
-                      <span className="text-muted-foreground">ብር 3,000/month</span>
-                      <span className="font-semibold">Full child support</span>
+                      <span className="text-muted-foreground">
+                        {language === 'am' ? 'ብር' : 'ETB'} 3,000/month
+                      </span>
+                      <span className="font-semibold">{t('sponsor.fullSupport')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">ብር 7,500/month</span>
-                      <span className="font-semibold">Multiple children support</span>
+                      <span className="text-muted-foreground">
+                        {language === 'am' ? 'ብር' : 'ETB'} 7,500/month
+                      </span>
+                      <span className="font-semibold">{t('sponsor.multipleSupport')}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -220,23 +233,23 @@ const Sponsor = () => {
                   <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-2">
                     <Shield className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold">Secure & Transparent</h3>
+                  <h3 className="text-xl font-bold">{t('sponsor.secureTransparent')}</h3>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start">
                       <span className="text-primary mr-2">✓</span>
-                      <span>Bank-level encryption</span>
+                      <span>{t('sponsor.bankEncryption')}</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">✓</span>
-                      <span>Regular impact updates</span>
+                      <span>{t('sponsor.impactUpdates')}</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">✓</span>
-                      <span>Cancel anytime</span>
+                      <span>{t('sponsor.cancelAnytime')}</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">✓</span>
-                      <span>Tax-deductible receipt</span>
+                      <span>{t('sponsor.taxDeductible')}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -245,9 +258,9 @@ const Sponsor = () => {
               {/* Stats Card */}
               <Card className="bg-primary text-primary-foreground">
                 <CardContent className="p-6 space-y-3">
-                  <h3 className="text-lg font-bold">Join 15,000+ Donors</h3>
+                  <h3 className="text-lg font-bold">{t('sponsor.joinDonors')}</h3>
                   <p className="text-sm text-primary-foreground/80">
-                    Our community has raised over ብር 100M this year, directly impacting 5,000+ Ethiopian children across all 12 regions.
+                    {t('sponsor.communityText')}
                   </p>
                 </CardContent>
               </Card>

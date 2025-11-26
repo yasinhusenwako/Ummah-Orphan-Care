@@ -45,16 +45,17 @@ const Admin = () => {
     try {
       const db = getFirestore();
       
-      // Fetch total donors
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const totalDonors = usersSnapshot.size;
+      // Fetch all data in parallel for better performance
+      const [usersSnapshot, orphansSnapshot, donationsSnapshot] = await Promise.all([
+        getDocs(collection(db, 'users')),
+        getDocs(collection(db, 'orphans')),
+        getDocs(collection(db, 'donations'))
+      ]);
 
-      // Fetch total orphans
-      const orphansSnapshot = await getDocs(collection(db, 'orphans'));
+      const totalDonors = usersSnapshot.size;
       const totalOrphans = orphansSnapshot.size;
 
-      // Fetch donations for monthly revenue and active subscriptions
-      const donationsSnapshot = await getDocs(collection(db, 'donations'));
+      // Calculate donations data
       let monthlyRevenue = 0;
       let activeSubscriptions = 0;
       

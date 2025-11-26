@@ -20,7 +20,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm text-primary-foreground/80">
-              Supporting Ethiopian orphaned children across all 12 regions with education, nutrition, shelter, and healthcare.
+              {t('footer.description')}
             </p>
           </div>
 
@@ -53,26 +53,26 @@ const Footer = () => {
 
           {/* Causes */}
           <div>
-            <h4 className="font-semibold text-lg mb-4">Our Causes</h4>
+            <h4 className="font-semibold text-lg mb-4">{t('causes.title')}</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/causes" className="text-sm hover:text-accent transition-colors">
-                  Education Programs
+                  {t('causes.education')}
                 </Link>
               </li>
               <li>
                 <Link to="/causes" className="text-sm hover:text-accent transition-colors">
-                  Food & Nutrition
+                  {t('causes.food')}
                 </Link>
               </li>
               <li>
                 <Link to="/causes" className="text-sm hover:text-accent transition-colors">
-                  Safe Shelter
+                  {t('causes.shelter')}
                 </Link>
               </li>
               <li>
                 <Link to="/causes" className="text-sm hover:text-accent transition-colors">
-                  Healthcare
+                  {t('causes.healthcare')}
                 </Link>
               </li>
             </ul>
